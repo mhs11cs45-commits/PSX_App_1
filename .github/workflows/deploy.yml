@@ -1,1 +1,47 @@
 name: Deploy PSX App
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Fix mobile click handlers
+        run: |
+          sed -i "s/const showLogin =/window.showLogin = function/g" index.html
+          sed -i "s/const backToPortal =/window.backToPortal = function/g" index.html
+          sed -i "s/const handleLogin =/window.handleLogin = function/g" index.html
+          sed -i "s/const logout =/window.logout = function/g" index.html
+          sed -i "s/const switchTab =/window.switchTab = function/g" index.html
+          sed -i "s/const analyzeStock =/window.analyzeStock = function/g" index.html
+          sed -i "s/const downloadCard =/window.downloadCard = function/g" index.html
+          sed -i "s/const resetCard =/window.resetCard = function/g" index.html
+          sed -i "s/const renderCard =/window.renderCard = function/g" index.html
+          sed -i "s/const fetchStockData =/window.fetchStockData = function/g" index.html
+          sed -i "s/const esc =/window.esc = function/g" index.html
+          sed -i "s/const showToast =/window.showToast = function/g" index.html
+          sed -i 's/onclick="showLogin/onclick="window.showLogin/g' index.html
+          sed -i 's/onclick="backToPortal/onclick="window.backToPortal/g' index.html
+          sed -i 's/onclick="handleLogin/onclick="window.handleLogin/g' index.html
+          sed -i 's/onclick="logout/onclick="window.logout/g' index.html
+          sed -i 's/onclick="switchTab/onclick="window.switchTab/g' index.html
+          sed -i 's/onclick="analyzeStock/onclick="window.analyzeStock/g' index.html
+          sed -i 's/onclick="downloadCard/onclick="window.downloadCard/g' index.html
+          sed -i 's/onclick="resetCard/onclick="window.resetCard/g' index.html
+          sed -i 's/onclick="setPreset/onclick="window.setPreset/g' index.html
+          sed -i 's/onclick="loadFullReport/onclick="window.loadFullReport/g' index.html
+          sed -i 's/onclick="renderReportToggle/onclick="window.renderReportToggle/g' index.html
+          sed -i 's/onclick="closeModal/onclick="window.closeModal/g' index.html
+          sed -i 's/onsubmit="handleLogin/onsubmit="window.handleLogin/g' index.html
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+
